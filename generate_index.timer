@@ -1,0 +1,9 @@
+[Unit]
+Description=Run generate_index at 5am PST every day
+
+[Timer]
+OnCalendar=*-*-* 13:00:00  # This means 5:00 AM PST (PST is UTC-8, so 13:00 UTC is 5:00 AM PST)
+Persistent=true  # Ensures the task runs even if the system is down when it's scheduled
+
+[Install]
+WantedBy=timers.target  # Makes the timer start automatically when the system boots up
