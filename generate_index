@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Stop the script if any command fails and handle errors more safely
+set -euo pipefail
+
+# This script generates a simple HTML file with system information
+# You shouldn't need to edit this unless you want to change the output
+
+# Define some variables to store system info
+KERNEL_RELEASE=$(uname -r)  # Get the current kernel version
+OS_NAME=$(grep '^PRETTY_NAME' /etc/os-release | cut -d '=' -f2 | tr -d '"')  # Get the OS name
+DATE=$(date +"%d/%m/%Y")  # Get the current date
+PACKAGE_COUNT=$(pacman -Q | wc -l)  # Get the number of installed packages
+OUTPUT_DIR="/var/lib/webgen/HTML"  # Directory where the HTML file will be saved
+OUTPUT_FILE="$OUTPUT_DIR/index.html"  # Path to the output HTML file
+
+# Check if the target directory exists, create it if it doesn't
+if [[ ! -d "$OUTPUT_DIR" ]]; then
+    echo "Oops! The directory $OUTPUT_DIR doesn't exist. Creating it now..." >&2
+    mkdir -p "$OUTPUT_DIR"  # Create the directory if it doesn't exist
+    if [[ $? -ne 0 ]]; then  # Check if the directory creation failed
+        echo "Error: Failed to create directory $OUTPUT_DIR." >&2
+        exit 1
+    fi
+fi
+
+# Create the HTML file with the system information
+cat <<EOF > "$OUTPUT_FILE"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Information</title>
+</head>
+<body>
+    <h1>System Information</h1>
+    <p><strong>Kernel Release:</strong> $KERNEL_RELEASE</p>
+    <p><strong>Operating System:</strong> $OS_NAME</p>
+    <p><strong>Date:</strong> $DATE</p>
+    <p><strong>Number of Installed Packages:</strong> $PACKAGE_COUNT</p>
+</body>
+</html>
+EOF
+
+# Check if the HTML file was created successfully
+if [[ $? -eq 0 ]]; then
+    echo "Success! The HTML file has been created at $OUTPUT_FILE."
+else
+    echo "Oops! Something went wrong and the file couldn't be created." >&2
+    exit 1
+fi
