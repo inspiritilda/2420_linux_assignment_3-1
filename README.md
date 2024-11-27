@@ -17,7 +17,7 @@ git clone https://github.com/inspiritilda/2420_linux_assignment_3-1.git
 ### 3. Run the Setup Script
 Now, change into the cloned directory and run the setup script with:
 ```bash
-cd ~/nginx-setup
-sudo ./setup-script
+cd ~/nginx_setup
+sudo ./setup_script
 ```
 The script will automatically install and configure Nginx for you. It will also set up the necessary files and permissions.
